@@ -1,19 +1,19 @@
 #include "main.h"
 
-void removeSpaces(string& s) {
-    s.erase(remove_if(s.begin(), s.end(), [](char c){
+void removeSpaces(string& task) {
+    task.erase(remove_if(task.begin(), task.end(), [](char c){
         return c == ' ';
-    }), s.end());
+    }), task.end());
 }
 
-void solve(string& s) {
-    vector<node> a;
-    removeSpaces(s);
-    if(!parse(s, a)) {
+void solve(string& task) {
+    vector<node> parsedExpr;
+    removeSpaces(task);
+    if(!parse(task, parsedExpr)) {
         cout << "error: wrong input format" << endl;
         return;
     }
     int i = 0;
-    double ans = calculate(i, a);
-    cout << doubleToRoman(ans) << endl;
+    double answer = calculate(i, parsedExpr);
+    cout << doubleToRoman(answer) << endl;
 }

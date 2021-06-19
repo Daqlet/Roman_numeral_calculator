@@ -1,9 +1,9 @@
 #include "main.h"
 
 int main() {
-    string s;
-    while(getline(cin, s)) {
-        solve(s);
+    string task;
+    while(getline(cin, task)) {
+        solve(task);
     }
     return 0;
 }

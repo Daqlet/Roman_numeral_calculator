@@ -4,32 +4,32 @@ bool lowPriority(node n) {
     return n.symbol == '+' || n.symbol == '-';
 }
 
-node comb(double val1, double val2, char op) {
-    if(op == '+') {
-        return {val1 + val2, '0'};
-    } else if(op == '-') {
-        return {val1 - val2, '0'};
-    } else if(op == '*') {
-        return {val1 * val2, '0'};
+node comb(double value1, double value2, char operation) {
+    if(operation == '+') {
+        return {value1 + value2, '0'};
+    } else if(operation == '-') {
+        return {value1 - value2, '0'};
+    } else if(operation == '*') {
+        return {value1 * value2, '0'};
     } else {
-        return {val1 / val2, '0'};
+        return {value1 / value2, '0'};
     }
 }
 
-double calculate(int &i, vector<node>& a) {
+double calculate(int &i, vector<node>& parsedExpr) {
     stack<node> stack;
-    for(; i < a.size(); i++) {
-        if(a[i].symbol == ')') {
+    for(; i < parsedExpr.size(); i++) {
+        if(parsedExpr[i].symbol == ')') {
             break;
         }
-        if(isOperation(a[i].symbol)) {
-            stack.push(a[i]);
+        if(isOperation(parsedExpr[i].symbol)) {
+            stack.push(parsedExpr[i]);
             continue;
         }
-        node temp = a[i];
-        if(a[i].symbol == '(') {
+        node temp = parsedExpr[i];
+        if(parsedExpr[i].symbol == '(') {
             i++;
-            temp = node(calculate(i, a), '0');
+            temp = node(calculate(i, parsedExpr), '0');
         }
         if(stack.empty()) {
             stack.push(temp);
@@ -41,16 +41,16 @@ double calculate(int &i, vector<node>& a) {
             }
             stack.push(temp);
         } else {
-            node oper = stack.top(); stack.pop();
+            node operation = stack.top(); stack.pop();
             node val = stack.top(); stack.pop();
-            stack.push(comb(val.value, temp.value, oper.symbol));
+            stack.push(comb(val.value, temp.value, operation.symbol));
         }
     }
     while(stack.size() > 1) {
-        node val2 = stack.top(); stack.pop();
-        node oper = stack.top(); stack.pop();
-        node val1 = stack.top(); stack.pop();
-        stack.push(comb(val1.value, val2.value, oper.symbol));
+        node value2 = stack.top(); stack.pop();
+        node operation = stack.top(); stack.pop();
+        node value1 = stack.top(); stack.pop();
+        stack.push(comb(value1.value, value2.value, operation.symbol));
     }
     return stack.top().value;
 }

@@ -11,97 +11,97 @@ unordered_map<char, int> mapRoman{
     {'Z', 0},
 };
 int values[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
-string str_romans[] = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+string romans[] = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
 
 bool isOperation(char c) {
     return c == '+' || c == '-' || c == '*' || c == '/';
 }
 
-string doubleToRoman(double n) {
-    if(1 > abs(n)) return "Z";
+string doubleToRoman(double value) {
+    if(1 > abs(value)) return "Z";
     string result = "";
-    if(n < 0) {
-        n = -n;
+    if(value < 0) {
+        value = -value;
         result = "-";
     }
     for (int i = 0; i < 13; ++i)
     {
-        while(n - values[i] >= 0)
+        while(value - values[i] >= 0)
         {
-            result += str_romans[i];
-            n -= values[i];
+            result += romans[i];
+            value -= values[i];
         }
     }
     return result;
 }
 
-double romanToDouble(string s) {
+double romanToDouble(string roman) {
     double res = 0;
-    for(int i = 0; i < s.length(); ++i) {
-        if(i+1 < s.length() && mapRoman[s[i]] < mapRoman[s[i+1]]) {
-            res += mapRoman[s[i+1]] - mapRoman[s[i]];
+    for(int i = 0; i < roman.length(); ++i) {
+        if(i+1 < roman.length() && mapRoman[roman[i]] < mapRoman[roman[i+1]]) {
+            res += mapRoman[roman[i+1]] - mapRoman[roman[i]];
             i++;
         } else {
-            res += mapRoman[s[i]];
+            res += mapRoman[roman[i]];
         }
     }
     return res;
 }
 
-bool isCorrectOperation(vector<node>& a) {
-    bool isOp = 0;
+bool isCorrectOperation(vector<node>& parsedExpr) {
+    bool needOper = 0;
     int scope = 0;
-    for(int i = 0; i < a.size(); ++i) {
-        if(a[i].symbol == '(') {
+    for(int i = 0; i < parsedExpr.size(); ++i) {
+        if(parsedExpr[i].symbol == '(') {
             scope++; continue;
-        } else if(a[i].symbol == ')') {
+        } else if(parsedExpr[i].symbol == ')') {
             if(--scope < 0) {
                 return 0;
             }
             continue;
         }
-        if(isOp ^ isOperation(a[i].symbol)) {
+        if(needOper ^ isOperation(parsedExpr[i].symbol)) {
             return 0;
         }
-        isOp = !isOp;
+        needOper = !needOper;
     }
     return scope == 0;
 }
 
-bool isCorrectRomanNumber(string s) {
-    if(s.length() == 1 && s[0] == 'Z') return 1;
-    regex roman_expr ("^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$");
-    bool ok = regex_match(s, roman_expr);
-    return ok && !s.empty();
+bool isCorrectRomanNumber(string roman) {
+    if(roman.length() == 1 && roman[0] == 'Z') return 1;
+    regex romanExpr ("^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$");
+    bool ok = regex_match(roman, romanExpr);
+    return ok && !roman.empty();
 }
 
-bool parse(string& s, vector<node>& a) {
-    bool isOp = 0;
-    for(int i = 0; i < s.length(); ) {
-        if(s[i] == ')' || s[i] == '(') {
-            a.push_back(node(0, s[i++]));
+bool parse(string& roman, vector<node>& parsedExpr) {
+    bool needOper = 0;
+    for(int i = 0; i < roman.length(); ) {
+        if(roman[i] == ')' || roman[i] == '(') {
+            parsedExpr.push_back(node(0, roman[i++]));
             continue;
         }
-        if(isOp) {
-            a.push_back(node(0, s[i++]));
-            isOp = 0;
+        if(needOper) {
+            parsedExpr.push_back(node(0, roman[i++]));
+            needOper = 0;
             continue;
         }
         int sign = 1;
-        if(s[i] == '-') {
+        if(roman[i] == '-') {
             i++;
             sign = -1;
         }
         int start = i;
-        while(mapRoman.count(s[i])) {
+        while(mapRoman.count(roman[i])) {
             i++;
         } 
-        string romanNumber = s.substr(start, i-start);
+        string romanNumber = roman.substr(start, i-start);
         if(isCorrectRomanNumber(romanNumber)) {
             double val = sign * romanToDouble(romanNumber);
-            a.push_back(node(val, '0'));
+            parsedExpr.push_back(node(val, '0'));
         } else return 0;
-        isOp = 1;
+        needOper = 1;
     }
-    return isCorrectOperation(a);
+    return isCorrectOperation(parsedExpr);
 }

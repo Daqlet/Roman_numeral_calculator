@@ -5,9 +5,9 @@ using namespace std;
 struct node {
     double value;
     char symbol;
-    node(double v, char c) {
-        value = v;
-        symbol = c;
+    node(double value_, char symbol_) {
+        value = value_;
+        symbol = symbol_;
     }
 };
 
