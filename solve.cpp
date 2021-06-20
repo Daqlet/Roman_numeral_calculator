@@ -1,19 +1,21 @@
 #include "main.h"
 
-void removeSpaces(string& task) {
-    task.erase(remove_if(task.begin(), task.end(), [](char c){
-        return c == ' ';
-    }), task.end());
+void RunConverter(std::istream& is) {
+    std::string task;
+    while (std::getline(is, task)) {
+        Solve(task);
+    }
 }
 
-void solve(string& task) {
-    vector<node> parsedExpr;
-    removeSpaces(task);
-    if(!parse(task, parsedExpr)) {
-        cout << "error: wrong input format" << endl;
-        return;
+void Solve(std::string& task) {
+    std::vector<Node> parsedExpr;
+    task.erase(remove(task.begin(), task.end(), ' '), task.end());
+     if (Parse(task, parsedExpr)) {
+        int idx = 0;
+        double answer = CalculateExpr(idx, parsedExpr);
+        std::cout << ConvertToRoman(answer) << std::endl;
     }
-    int i = 0;
-    double answer = calculate(i, parsedExpr);
-    cout << doubleToRoman(answer) << endl;
+    else {
+        std::cout << "error: wrong input format" << std::endl;
+    }
 }

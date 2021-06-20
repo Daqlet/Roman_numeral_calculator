@@ -1,56 +1,65 @@
 #include "main.h"
 
-bool lowPriority(node n) {
-    return n.symbol == '+' || n.symbol == '-';
+bool IsLowPriority(const Node& n) {
+    return (n.character == '+' || n.character == '-');
 }
 
-node comb(double value1, double value2, char operation) {
-    if(operation == '+') {
-        return {value1 + value2, '0'};
-    } else if(operation == '-') {
-        return {value1 - value2, '0'};
-    } else if(operation == '*') {
-        return {value1 * value2, '0'};
-    } else {
-        return {value1 / value2, '0'};
+Node Combinate(const double& lhs, const double& rhs, const char& operation) {
+    switch (operation) {
+        case '+': {
+            return { lhs + rhs, '0' };
+        }
+        case '-': {
+            return { lhs - rhs, '0' };
+        }
+        case '*': {
+            return { lhs * rhs, '0' };
+        }
+        case '/': {
+            return { lhs / rhs, '0' };
+        }
+        default: {
+            throw std::invalid_argument("Unknown operation");
+        }
     }
 }
 
-double calculate(int &i, vector<node>& parsedExpr) {
-    stack<node> stack;
+
+double CalculateExpr(int &i, const std::vector<Node>& parsedExpr) {
+    std::stack<Node> stack;
     for(; i < parsedExpr.size(); i++) {
-        if(parsedExpr[i].symbol == ')') {
+        if(parsedExpr[i].character == ')') {
             break;
         }
-        if(isOperation(parsedExpr[i].symbol)) {
+        if(IsOperation(parsedExpr[i].character)) {
             stack.push(parsedExpr[i]);
             continue;
         }
-        node temp = parsedExpr[i];
-        if(parsedExpr[i].symbol == '(') {
+        Node temp = parsedExpr[i];
+        if(parsedExpr[i].character == '(') {
             i++;
-            temp = node(calculate(i, parsedExpr), '0');
+            temp = Node(CalculateExpr(i, parsedExpr), '0');
         }
         if(stack.empty()) {
             stack.push(temp);
-        } else if (lowPriority(stack.top())) {
-            if(stack.top().symbol == '-') {
+        } else if (IsLowPriority(stack.top())) {
+            if(stack.top().character == '-') {
                 stack.pop();
-                stack.push(node(0, '+'));
+                stack.push(Node(0, '+'));
                 temp.value = -temp.value;
             }
             stack.push(temp);
         } else {
-            node operation = stack.top(); stack.pop();
-            node val = stack.top(); stack.pop();
-            stack.push(comb(val.value, temp.value, operation.symbol));
+            Node operation = stack.top(); stack.pop();
+            Node val = stack.top(); stack.pop();
+            stack.push(Combinate(val.value, temp.value, operation.character));
         }
     }
     while(stack.size() > 1) {
-        node value2 = stack.top(); stack.pop();
-        node operation = stack.top(); stack.pop();
-        node value1 = stack.top(); stack.pop();
-        stack.push(comb(value1.value, value2.value, operation.symbol));
+        Node value2 = stack.top(); stack.pop();
+        Node operation = stack.top(); stack.pop();
+        Node value1 = stack.top(); stack.pop();
+        stack.push(Combinate(value1.value, value2.value, operation.character));
     }
     return stack.top().value;
 }

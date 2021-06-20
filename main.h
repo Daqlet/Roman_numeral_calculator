@@ -1,19 +1,18 @@
 #pragma once
 #include <bits/stdc++.h>
-using namespace std;
 
-struct node {
+struct Node {
     double value;
-    char symbol;
-    node(double value_, char symbol_) {
+    char character;
+    Node(double value_, char character_) {
         value = value_;
-        symbol = symbol_;
+        character = character_;
     }
 };
 
-
-void solve(string&);
-string doubleToRoman(double);
-bool parse(string&, vector<node>&);
-bool isOperation(char);
-double calculate(int&, vector<node>&);
+void RunConverter(std::istream&);
+void Solve(std::string&);
+std::string ConvertToRoman(double);
+bool Parse(const std::string&, std::vector<Node>&);
+bool IsOperation(const char&);
+double CalculateExpr(int&, const std::vector<Node>&);

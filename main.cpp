@@ -1,9 +1,6 @@
 #include "main.h"
 
 int main() {
-    string task;
-    while(getline(cin, task)) {
-        solve(task);
-    }
+    RunConverter(std::cin);
     return 0;
 }
