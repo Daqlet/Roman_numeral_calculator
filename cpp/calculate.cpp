@@ -16,6 +16,9 @@ Node Combinate(const double& lhs, const double& rhs, const char& operation) {
             return { lhs * rhs, '0' };
         }
         case '/': {
+            if(rhs == 0) {
+                return { 0, 'e' };
+            }
             return { lhs / rhs, '0' };
         }
         default: {
@@ -52,14 +55,24 @@ double CalculateExpr(int &i, const std::vector<Node>& parsedExpr) {
         } else {
             Node operation = stack.top(); stack.pop();
             Node val = stack.top(); stack.pop();
-            stack.push(Combinate(val.value, temp.value, operation.character));
+            Node result = Combinate(val.value, temp.value, operation.character);
+            if(result.character == 'e') {
+                std::cout << "error: divide by zero ";
+                return 0;
+            }
+            stack.push(result);
         }
     }
     while(stack.size() > 1) {
         Node value2 = stack.top(); stack.pop();
         Node operation = stack.top(); stack.pop();
         Node value1 = stack.top(); stack.pop();
-        stack.push(Combinate(value1.value, value2.value, operation.character));
+        Node result = Combinate(value1.value, value2.value, operation.character);
+        if(result.character == 'e') {
+            std::cout << "error: divide by zero ";
+            return 0;
+        }
+        stack.push(result);
     }
     return stack.top().value;
 }
