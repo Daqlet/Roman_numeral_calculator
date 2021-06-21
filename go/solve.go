@@ -19,7 +19,11 @@ func Solve(task string) {
 	task = strings.ReplaceAll(task, " ", "")
 	if Parse([]rune(task), &parsedExpr) {
 		idx := 0
-		answer := CalculateExpr(&idx, parsedExpr)
+		answer, err := CalculateExpr(&idx, parsedExpr)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		fmt.Println(ConvertToRoman(answer))
 	} else {
 		fmt.Println("error: wrong input format")

@@ -1,30 +1,32 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+)
 
 func IsLowPriority(temp Node) bool {
 	return temp.character == '+' || temp.character == '-'
 }
 
-func Combinate(lhs, rhs float64, operation rune) Node {
+func Combinate(lhs, rhs float64, operation rune) (Node, error) {
 	switch operation {
 	case '+':
-		return Node{lhs + rhs, '0'}
+		return Node{lhs + rhs, '0'}, nil
 	case '-':
-		return Node{lhs - rhs, '0'}
+		return Node{lhs - rhs, '0'}, nil
 	case '*':
-		return Node{lhs * rhs, '0'}
+		return Node{lhs * rhs, '0'}, nil
 	case '/':
 		if rhs == 0 {
-			return Node{0, 'e'}
+			return Node{}, errors.New("error: divide by zero")
 		}
-		return Node{lhs / rhs, '0'}
+		return Node{lhs / rhs, '0'}, nil
 	default:
 		panic("Unknown operation")
 	}
 }
 
-func CalculateExpr(i *int, parsedExpr []Node) float64 {
+func CalculateExpr(i *int, parsedExpr []Node) (float64, error) {
 	var stack []Node
 	for ; *i < len(parsedExpr); *i++ {
 		if parsedExpr[*i].character == ')' {
@@ -37,7 +39,11 @@ func CalculateExpr(i *int, parsedExpr []Node) float64 {
 		temp := parsedExpr[*i]
 		if parsedExpr[*i].character == '(' {
 			*i++
-			temp = Node{CalculateExpr(i, parsedExpr), '0'}
+			value, err := CalculateExpr(i, parsedExpr)
+			if err != nil {
+				return 0, err
+			}
+			temp = Node{value, '0'}
 		}
 		last := len(stack) - 1
 		if len(stack) == 0 {
@@ -55,10 +61,9 @@ func CalculateExpr(i *int, parsedExpr []Node) float64 {
 			last--
 			value := stack[last]
 			stack = stack[:last]
-			combinated := Combinate(value.value, temp.value, operation.character)
-			if combinated.character == 'e' {
-				fmt.Print("error: divide by zero ")
-				return 0
+			combinated, err := Combinate(value.value, temp.value, operation.character)
+			if err != nil {
+				return 0, err
 			}
 			stack = append(stack, combinated)
 		}
@@ -71,12 +76,11 @@ func CalculateExpr(i *int, parsedExpr []Node) float64 {
 		size--
 		value1 := stack[size]
 		stack = stack[:size]
-		combinated := Combinate(value1.value, value2.value, operation.character)
-		if combinated.character == 'e' {
-			fmt.Print("error: divide by zero ")
-			return 0
+		combinated, err := Combinate(value1.value, value2.value, operation.character)
+		if err != nil {
+			return 0, err
 		}
 		stack = append(stack, combinated)
 	}
-	return stack[size].value
+	return stack[size].value, nil
 }
