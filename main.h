@@ -4,10 +4,7 @@
 struct Node {
     double value;
     char character;
-    Node(double value_, char character_) {
-        value = value_;
-        character = character_;
-    }
+    Node(double value_, char character_) : value(value_), character(character_){}
 };
 
 void RunConverter(std::istream&);
