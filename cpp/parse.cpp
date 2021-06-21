@@ -75,28 +75,28 @@ bool IsCorrectRomanNumber(const std::string& roman) {
     return ok && !roman.empty();
 }
 
-bool Parse(const std::string& roman, std::vector<Node>& parsedExpr) {
+bool Parse(const std::string& task, std::vector<Node>& parsedExpr) {
     bool needOperation = 0;
-    for(int i = 0; i < roman.length(); ) {
-        if(roman[i] == ')' || roman[i] == '(') {
-            parsedExpr.push_back(Node(0, roman[i++]));
+    for(int i = 0; i < task.length(); ) {
+        if(task[i] == ')' || task[i] == '(') {
+            parsedExpr.push_back(Node(0, task[i++]));
             continue;
         }
         if(needOperation) {
-            parsedExpr.push_back(Node(0, roman[i++]));
+            parsedExpr.push_back(Node(0, task[i++]));
             needOperation = 0;
             continue;
         }
         int sign = 1;
-        if(roman[i] == '-') {
+        if(task[i] == '-') {
             i++;
             sign = -1;
         }
         int start = i;
-        while(mapRoman.count(roman[i])) {
+        while(mapRoman.count(task[i])) {
             i++;
         } 
-        std::string romanNumber = roman.substr(start, i-start);
+        std::string romanNumber = task.substr(start, i-start);
         if(IsCorrectRomanNumber(romanNumber)) {
             double val = sign * ConvertToDouble(romanNumber);
             parsedExpr.push_back(Node(val, '0'));
