@@ -19,7 +19,7 @@ func Solve(task string) {
 	task = strings.ReplaceAll(task, " ", "")
 	if Parse([]rune(task), &parsedExpr) {
 		idx := 0
-		answer, err := CalculateExpr(&idx, parsedExpr)
+		answer, err := CalculateExpr(&idx, &parsedExpr)
 		if err != nil {
 			fmt.Println(err)
 			return

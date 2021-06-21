@@ -8,7 +8,7 @@ func IsLowPriority(temp Node) bool {
 	return temp.character == '+' || temp.character == '-'
 }
 
-func Combinate(lhs, rhs float64, operation rune) (Node, error) {
+func Combine(lhs, rhs float64, operation rune) (Node, error) {
 	switch operation {
 	case '+':
 		return Node{lhs + rhs, '0'}, nil
@@ -26,18 +26,18 @@ func Combinate(lhs, rhs float64, operation rune) (Node, error) {
 	}
 }
 
-func CalculateExpr(i *int, parsedExpr []Node) (float64, error) {
+func CalculateExpr(i *int, parsedExpr *[]Node) (float64, error) {
 	var stack []Node
-	for ; *i < len(parsedExpr); *i++ {
-		if parsedExpr[*i].character == ')' {
+	for ; *i < len(*parsedExpr); *i++ {
+		if (*parsedExpr)[*i].character == ')' {
 			break
 		}
-		if IsOperation(parsedExpr[*i].character) {
-			stack = append(stack, parsedExpr[*i])
+		if IsOperation((*parsedExpr)[*i].character) {
+			stack = append(stack, (*parsedExpr)[*i])
 			continue
 		}
-		temp := parsedExpr[*i]
-		if parsedExpr[*i].character == '(' {
+		temp := (*parsedExpr)[*i]
+		if (*parsedExpr)[*i].character == '(' {
 			*i++
 			value, err := CalculateExpr(i, parsedExpr)
 			if err != nil {
@@ -61,11 +61,11 @@ func CalculateExpr(i *int, parsedExpr []Node) (float64, error) {
 			last--
 			value := stack[last]
 			stack = stack[:last]
-			combinated, err := Combinate(value.value, temp.value, operation.character)
+			combined, err := Combine(value.value, temp.value, operation.character)
 			if err != nil {
 				return 0, err
 			}
-			stack = append(stack, combinated)
+			stack = append(stack, combined)
 		}
 	}
 	size := len(stack) - 1
@@ -76,11 +76,11 @@ func CalculateExpr(i *int, parsedExpr []Node) (float64, error) {
 		size--
 		value1 := stack[size]
 		stack = stack[:size]
-		combinated, err := Combinate(value1.value, value2.value, operation.character)
+		combined, err := Combine(value1.value, value2.value, operation.character)
 		if err != nil {
 			return 0, err
 		}
-		stack = append(stack, combinated)
+		stack = append(stack, combined)
 	}
 	return stack[size].value, nil
 }
