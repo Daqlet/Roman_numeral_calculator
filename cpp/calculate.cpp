@@ -19,7 +19,7 @@ Node Combinate(const double& lhs, const double& rhs, const char& operation) {
             if(rhs == 0) {
                 return { 0, 'e' };
             }
-            return { lhs / rhs, '0' };
+            return { floor(lhs / rhs), '0' };
         }
         default: {
             throw std::invalid_argument("Unknown operation");
