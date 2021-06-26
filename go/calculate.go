@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"math"
 )
 
 func IsLowPriority(temp Node) bool {
@@ -20,7 +21,7 @@ func Combine(lhs, rhs float64, operation rune) (Node, error) {
 		if rhs == 0 {
 			return Node{}, errors.New("error: divide by zero")
 		}
-		return Node{lhs / rhs, '0'}, nil
+		return Node{math.Floor(lhs / rhs), '0'}, nil
 	default:
 		panic("Unknown operation")
 	}
