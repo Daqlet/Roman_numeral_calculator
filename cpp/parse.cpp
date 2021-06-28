@@ -18,6 +18,7 @@ bool IsOperation(const char& c) {
 }
 
 std::string ConvertToRoman(double value) {
+    value = floor(value);
     if(1 > abs(value)) return "Z";
     std::string result = "";
     if(value < 0) {
@@ -60,7 +61,7 @@ bool IsCorrectOperation(const std::vector<Node>& parsedExpr) {
             }
             continue;
         }
-        if(needOperation ^ IsOperation(parsedExpr[i].character)) {
+        if(needOperation != IsOperation(parsedExpr[i].character)) {
             return 0;
         }
         needOperation = !needOperation;

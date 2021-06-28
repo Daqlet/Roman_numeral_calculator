@@ -1,10 +1,11 @@
 package main
 
 import (
+	"math"
 	"regexp"
 )
 
-var mapRoman = map[rune]int {
+var mapRoman = map[rune]int{
 	'M': 1000,
 	'D': 500,
 	'C': 100,
@@ -18,7 +19,7 @@ var values = []int{1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1}
 var romans = []string{"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"}
 
 func ConvertToRoman(value float64) string {
-	temp := int(value) // sorry about that
+	temp := int(math.Floor(value))
 	if temp == 0 {
 		return "Z"
 	}
@@ -28,7 +29,7 @@ func ConvertToRoman(value float64) string {
 		result = "-"
 	}
 	for i := 0; i < 13; i++ {
-		for temp - values[i] >= 0 {
+		for temp-values[i] >= 0 {
 			result += romans[i]
 			temp -= values[i]
 		}
@@ -65,7 +66,7 @@ func IsCorrectOperation(parsedExpr *[]Node) bool {
 func ConvertToFloat(roman []rune) int {
 	result := 0
 	for i := 0; i < len(roman); i++ {
-		if i + 1 < len(roman) && mapRoman[roman[i]] < mapRoman[roman[i+1]] {
+		if i+1 < len(roman) && mapRoman[roman[i]] < mapRoman[roman[i+1]] {
 			result += mapRoman[roman[i+1]] - mapRoman[roman[i]]
 			i++
 		} else {
@@ -113,7 +114,7 @@ func Parse(task []rune, parsedExpr *[]Node) bool {
 			}
 			i++
 		}
-		romanNumber := task[start : i]
+		romanNumber := task[start:i]
 		if IsCorrectRomanNumber(romanNumber) {
 			value := sign * ConvertToFloat(romanNumber)
 			*parsedExpr = append(*parsedExpr, Node{float64(value), '0'})
