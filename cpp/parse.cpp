@@ -66,7 +66,7 @@ bool IsCorrectOperation(const std::vector<Node>& parsedExpr) {
         }
         needOperation = !needOperation;
     }
-    return scopeCount == 0;
+    return scopeCount == 0 && needOperation;
 }
 
 bool IsCorrectRomanNumber(const std::string& roman) {

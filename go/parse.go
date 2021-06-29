@@ -60,7 +60,7 @@ func IsCorrectOperation(parsedExpr *[]Node) bool {
 		}
 		needOperation = !needOperation
 	}
-	return scopeCount == 0
+	return scopeCount == 0 && needOperation
 }
 
 func ConvertToFloat(roman []rune) int {

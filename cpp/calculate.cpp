@@ -63,7 +63,7 @@ double CalculateExpr(int &i, const std::vector<Node>& parsedExpr) {
             stack.push(result);
         }
     }
-    while(stack.size() > 1) {
+    while(stack.size() > 2) {
         Node value2 = stack.top(); stack.pop();
         Node operation = stack.top(); stack.pop();
         Node value1 = stack.top(); stack.pop();

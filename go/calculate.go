@@ -70,7 +70,7 @@ func CalculateExpr(i *int, parsedExpr *[]Node) (float64, error) {
 		}
 	}
 	size := len(stack) - 1
-	for size > 1 {
+	for size > 2 {
 		value2 := stack[size]
 		size--
 		operation := stack[size]
