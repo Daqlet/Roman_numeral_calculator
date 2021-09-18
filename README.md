@@ -1,2 +1,2 @@
-# Vk_test_task
-Solving problem from https://vk.com/@vkteam-testovoe-zadanie-dlya-stazhera-v-komandu-core-infrastructure
+# Roman_numeral_calculator
+Calculator that operates with Roman numbers and displays the answer in Roman numerals
